@@ -1,12 +1,14 @@
-package com.unisabana.wordle.presentation.screens
+package com.unisabana.wordle.presentation.screens.game
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -19,11 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.unisabana.wordle.presentation.components.Grid
+import com.unisabana.wordle.presentation.components.Keyboard
+import com.unisabana.wordle.ui.theme.WordleTheme
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScoreScreen(onBack: () -> Unit) {
+fun GameScreen(onBack: () -> Unit, gameViewModel: GameViewModel = viewModel()) {
     Scaffold (containerColor = Color.Black,
         topBar = {
             TopAppBar(
@@ -37,41 +43,37 @@ fun ScoreScreen(onBack: () -> Unit) {
             )
         },
 
-        ){
+    ){
             innerPadding ->
-        Column (
-            modifier = Modifier.padding(innerPadding).fillMaxSize(),
+        Column (modifier = Modifier.padding(innerPadding)
+            .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-            ){
-            Spacer(modifier = Modifier.height(32.dp)) // espacio entre TopBar y lista
+            verticalArrangement = Arrangement.spacedBy(30.dp)
+        )
+        {
+            Spacer(modifier = Modifier.height(30.dp))
 
-            val scores = listOf(
-                "Name one - score",
-                "Name two - score",
-                "Name one - score",
-                "Name two - score",
-                "Name one - score",
-                "Name two - score",
-                "Name one - score",
-                "Name two - score"
+            Grid(
+                gameViewModel::current.get(),
+                gameViewModel::solution.get(),
+                gameViewModel::attempts.get()
             )
 
-            scores.forEachIndexed { index, item ->
-                Text(
-                    text = "${index + 1}. $item",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+            Keyboard {
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Button(onClick = {
-                onBack()
-            }) {
-                Text("Back!")
+            Button(
+                onClick = {
+                    // Go to ScoreDestination
+                    onBack()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF6AAA65)
+                )
+            ) {
+                Text("Scores", color = Color.White)
             }
         }
     }
@@ -79,6 +81,8 @@ fun ScoreScreen(onBack: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewScoreScreen(){
-    ScoreScreen(onBack = {})
+fun PreviewGameScreen(){
+    WordleTheme {
+        GameScreen(onBack = {})
+    }
 }

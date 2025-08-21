@@ -1,6 +1,8 @@
 package com.unisabana.wordle.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,23 +37,69 @@ fun Cell(character: String, blockType:CellType){
     Box(
         modifier = Modifier
             .size(50.dp)
-            .background(backgroundColor, shape = RoundedCornerShape(2.dp)),
+            .background(backgroundColor, shape = RoundedCornerShape(2.dp))
+            .border(1.dp, Color.Black, RoundedCornerShape(2.dp)), // 👈 borde blanco/transparente
+
+    contentAlignment = Alignment.Center
+    ) { // -> Container -> div
+        Text(character, fontSize = 26.sp, color = Color.White) // dp -> sp
+    }
+}
+
+@Composable
+fun Cell3(character: String, blockType:CellType){
+
+    val backgroundColor = when (blockType){
+        CellType.YELLOW -> Color(0xFFC9B457)
+        CellType.GREEN -> Color(0xFF6AAA65)
+        CellType.GREY -> Color(0xFF787C7F)
+        else -> Color.Transparent
+    }
+
+    Box(
+        modifier = Modifier
+            .size(60.dp)
+            .background(Color.Transparent, shape = RoundedCornerShape(2.dp))
+            .border(1.dp, Color.White.copy(alpha = 0.5f), RoundedCornerShape(2.dp)),
+
         contentAlignment = Alignment.Center
     ) { // -> Container -> div
         Text(character, fontSize = 26.sp, color = Color.White) // dp -> sp
     }
 }
 
+@Composable
+fun Cell2(character: String, blockType:CellType){
+
+    val backgroundColor = when (blockType){
+        CellType.YELLOW -> Color(0xFFC9B457)
+        CellType.GREEN -> Color(0xFF6AAA65)
+        CellType.GREY -> Color(0xFF787C7F)
+        else -> Color.Transparent
+    }
+
+    Box(
+        modifier = Modifier
+            .size(50.dp)
+            .background(backgroundColor, shape = RoundedCornerShape(2.dp))
+            .border(2.dp, Color.White.copy(alpha = 0.5f), RoundedCornerShape(2.dp)),
+
+        contentAlignment = Alignment.Center
+    ) { // -> Container -> div
+        Text(character, fontSize = 26.sp, color = Color.White, letterSpacing = 2.sp) // dp -> sp
+    }
+}
 @Preview
 @Composable
 fun PreviewCellSuccess(){
     Column {
         Row{
-            Cell("H", CellType.GREEN)
-            Cell("E", CellType.GREY)
-            Cell("L", CellType.YELLOW)
-            Cell("L", CellType.GREEN)
-            Cell("O", CellType.TRANSPARENT)
+            Cell("W", CellType.GREEN)
+            Cell("O", CellType.GREY)
+            Cell("R", CellType.YELLOW)
+            Cell("D", CellType.GREEN)
+            Cell("L", CellType.GREY)
+            Cell("E", CellType.GREEN)
         }
 
         Row{
@@ -63,7 +111,79 @@ fun PreviewCellSuccess(){
         }
     }
 }
+@Preview
+@Composable
+fun IconLogWordle(){
+    Column {
+        Row {
+            Cell("W", CellType.GREEN)
+            Cell("O", CellType.GREY)
+            Cell("R", CellType.YELLOW)
+            Cell("D", CellType.GREEN)
+            Cell("L", CellType.GREY)
+            Cell("E", CellType.GREEN)
+        }
+    }
+}
 
+
+@Composable
+fun Grid(current: String, solution: String, attempts: List<String>) {
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        for (i in 0..5)
+            Row (
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ){
+                for (i in 0..4)
+                    Cell3("   ", CellType.GREY)
+            }
+    }
+}
+
+@Preview
+@Composable
+fun Example1(){
+    Column {
+        Row {
+            Cell2("W", CellType.GREEN)
+            Cell2("O", CellType.TRANSPARENT)
+            Cell2("R", CellType.TRANSPARENT)
+            Cell2("D", CellType.TRANSPARENT)
+            Cell2("Y", CellType.TRANSPARENT)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun Example2(){
+    Column {
+        Row {
+            Cell2("L", CellType.TRANSPARENT)
+            Cell2("I", CellType.YELLOW)
+            Cell2("G", CellType.TRANSPARENT)
+            Cell2("H", CellType.TRANSPARENT)
+            Cell2("T", CellType.TRANSPARENT)
+        }
+    }
+}
+
+@Preview
+@Composable
+fun Example3(){
+    Column {
+        Row {
+            Cell2("R", CellType.TRANSPARENT)
+            Cell2("O", CellType.TRANSPARENT)
+            Cell2("G", CellType.TRANSPARENT)
+            Cell2("U", CellType.GREY)
+            Cell2("E", CellType.TRANSPARENT)
+        }
+    }
+}
 //
 //@Preview
 //@Composable
