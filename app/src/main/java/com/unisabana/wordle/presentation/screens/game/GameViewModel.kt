@@ -17,9 +17,18 @@ class GameViewModel : ViewModel(){
         private set
     var current by mutableStateOf("")
 
+    var isShowModal by mutableStateOf(false)
+        private set
+
 
 
     //Funs
+    fun showModal(){
+        isShowModal =true
+    }
+    fun hideModal(){
+        isShowModal=false
+    }
     fun restartGame(){
         solution= getRandomWord()
         current = ""
@@ -27,6 +36,13 @@ class GameViewModel : ViewModel(){
     }
 
     fun onSubmit(){
+
+        // TO do
+        if(current.equals(solution)){
+            isShowModal = true
+            print("Felicidades esa es la palabra")
+            println("Buneaaa")
+        }
         if(current.length ==5){
             attempts = attempts + current
             current = ""
@@ -36,18 +52,18 @@ class GameViewModel : ViewModel(){
     }
 
     fun onKeyPressed(letter: Char){
-        if(current.length <=5){
+        if(current.length <=4){
             current += letter
         }
 
     }
 
     fun onRemoveLetter(){
-        if(current.isEmpty()){
-            current.dropLast(1)
-
+        if (current.isNotEmpty()) {
+            current = current.dropLast(1)
         }
-
     }
+
+
 
 }

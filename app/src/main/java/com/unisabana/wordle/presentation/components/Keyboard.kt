@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun key(char: String, onPress: () -> Unit){
+fun key(char: String, onPress: (String) -> Unit){
     Box(
         modifier = Modifier
             .padding(2.dp)
@@ -26,6 +26,7 @@ fun key(char: String, onPress: () -> Unit){
             .padding(10.dp)
             .clickable {
                 // función
+                onPress(char)
             }
     )
     {
@@ -34,7 +35,7 @@ fun key(char: String, onPress: () -> Unit){
 }
 
 @Composable
-fun Keyboard(onPress:() -> Unit){
+fun Keyboard(onPress: (String) -> Unit){
     val row1="QWERTYUIOP"
     val row2="ASDFGHJKLÑ"
     val row3="←ZXCVBNM↵"

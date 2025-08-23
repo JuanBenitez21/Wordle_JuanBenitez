@@ -7,26 +7,43 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.unisabana.wordle.presentation.components.AlertDialogExample
 import com.unisabana.wordle.presentation.components.Grid
 import com.unisabana.wordle.presentation.components.Keyboard
 import com.unisabana.wordle.ui.theme.WordleTheme
 
 
+@Composable
+fun Estado(gameViewModel: GameViewModel){
+    if (gameViewModel.isShowModal){
+        AlertDialogExample(onConfirmation = {gameViewModel.hideModal()},
+            onDismissRequest = {gameViewModel.hideModal()},
+            dialogTitle = "Felicidades ha gando",
+            dialogText = "En "+ "x"+ "intentos",
+            icon = Icons.Filled.Done,)
+    }
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameScreen(onBack: () -> Unit, gameViewModel: GameViewModel = viewModel()) {
@@ -56,10 +73,15 @@ fun GameScreen(onBack: () -> Unit, gameViewModel: GameViewModel = viewModel()) {
             Grid(
                 gameViewModel::current.get(),
                 gameViewModel::solution.get(),
-                gameViewModel::attempts.get()
+                gameViewModel::attempts.get(),
             )
 
-            Keyboard {
+            Keyboard { key ->
+                when (key) {
+                    "←" -> gameViewModel.onRemoveLetter()
+                    "↵" -> gameViewModel.onSubmit()
+                    else -> gameViewModel.onKeyPressed(key.first())
+                }
             }
             Button(
                 onClick = {
@@ -76,7 +98,10 @@ fun GameScreen(onBack: () -> Unit, gameViewModel: GameViewModel = viewModel()) {
                 Text("Scores", color = Color.White)
             }
         }
+        Estado(gameViewModel)
     }
+
+
 }
 
 @Preview(showBackground = true)
@@ -85,4 +110,5 @@ fun PreviewGameScreen(){
     WordleTheme {
         GameScreen(onBack = {})
     }
+
 }
