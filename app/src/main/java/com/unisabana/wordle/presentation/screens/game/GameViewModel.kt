@@ -110,7 +110,7 @@ class GameViewModel(
 
 
      */
-
+/*
     fun onSubmit() {
         if (current.length == 5 && attempts.size < 6) {
             attempts = attempts + current
@@ -129,6 +129,50 @@ class GameViewModel(
         }
     }
 
+
+
+    fun onSubmit() {
+        if (current.length != 5) return
+
+        if (current == solution) {
+            isShowModal = true
+            finalScore = calculateFinalScore(attempts.size + 1)
+            calculateScore(finalScore) // Llama a la función aquí al ganar
+        }
+
+        attempts += current
+        if (current != solution && attempts.size == 6) {
+            isShowLose = true
+            calculateScore(0) // Llama a la función aquí al perder con un puntaje de 0
+        } else {
+            current = ""
+        }
+    }
+     */
+    fun onSubmit() {
+        // Solo procesa si la palabra tiene 5 letras y aún quedan intentos
+        if (current.length == 5 && attempts.size < 6) {
+            attempts += current
+
+            // Condición para GANAR
+            if (current.equals(solution, ignoreCase = true)) {
+                finalScore = calculateFinalScore(attempts.size)
+                calculateScore(finalScore) // Llama a la función aquí para guardar el puntaje
+                isShowModal = true // Muestra el modal de victoria
+                return
+            }
+
+            // Condición para PERDER
+            if (attempts.size == 6) {
+                calculateScore(0) // Llama a la función aquí con puntaje 0 al perder
+                isShowLose = true
+            } else {
+                current = ""
+            }
+        }
+    }
+
+    /*
     fun calculateScore() {
         viewModelScope.launch {
             scoreRepository.addScore(
@@ -136,6 +180,19 @@ class GameViewModel(
                 name = playerName, // Pasa el nombre a la función de la BD
                 count = attempts.size,
                 isWinner = true,
+                solution = solution,
+            )
+        }
+    }
+
+     */
+    fun calculateScore(scoreValue: Int) {
+        viewModelScope.launch {
+            scoreRepository.addScore(
+                score = scoreValue,
+                name = playerName, // Pasa el nombre a la función de la BD
+                count = attempts.size,
+                isWinner = scoreValue > 0, // Si el puntaje es mayor a 0, es ganador
                 solution = solution,
             )
         }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -54,22 +55,17 @@ fun ScoreScreen(onBack: () -> Unit, viewModel: GameViewModel = viewModel()) {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(1.dp))
 
             // Tabla 1: Ordenada por puntaje (descendente)
             ScoreTable(title = "Top Scores", viewModel.scoresByScoreDesc.collectAsState().value)
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(1.dp))
 
             // Tabla 2: Ordenada por fecha de creación (ascendente)
             ScoreTable(title = "Oldest Games", viewModel.scoresByDateAsc.collectAsState().value)
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Tabla 3: Ordenada por fecha de creación (descendente)
-            ScoreTable(title = "Recent Games", viewModel.scoresByDateDesc.collectAsState().value)
-
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(1.dp))
 
             Button(onClick = {
                 onBack()
@@ -78,6 +74,12 @@ fun ScoreScreen(onBack: () -> Unit, viewModel: GameViewModel = viewModel()) {
             ) {
                 Text("Return to home!")
             }
+            // Tabla 3: Ordenada por fecha de creación (descendente)
+            ScoreTable(title = "Recent Games", viewModel.scoresByDateDesc.collectAsState().value)
+
+            Spacer(modifier = Modifier.height(0.dp))
+
+
         }
     }
 }

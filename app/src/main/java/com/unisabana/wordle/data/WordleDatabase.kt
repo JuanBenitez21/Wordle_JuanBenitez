@@ -10,7 +10,7 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [Score::class],
-    version = 1,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class) // Le decimos a Room que use nuestro convertidor
