@@ -9,22 +9,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,18 +34,38 @@ import com.unisabana.wordle.ui.theme.WordleTheme
 
 
 @Composable
-fun Estado(gameViewModel: GameViewModel){
-    if (gameViewModel.isShowModal){
-        AlertDialogExample(onConfirmation = {gameViewModel.hideModal()},
-            onDismissRequest = {gameViewModel.hideModal()},
-            dialogTitle = "Felicidades ha gando",
-            dialogText = "En "+ "x"+ "intentos",
-            icon = Icons.Filled.Done,)
+fun Estado(gameViewModel: GameViewModel) {
+    if (gameViewModel.isShowModal) {
+        AlertDialogExample(
+            onConfirmation = {
+                gameViewModel.restartGame()
+            },
+            onDismissRequest = {
+                gameViewModel.restartGame()
+            },
+            dialogTitle = "¡Felicidades, has ganado!",
+            // Usa gameViewModel.finalScore para mostrar el puntaje
+            dialogText = "¡Puntaje: ${gameViewModel.finalScore}! Lo lograste en ${gameViewModel.attempts.size} intentos.",
+            icon = Icons.Filled.Done
+        )
+    } else if (gameViewModel.isShowLose) {
+        AlertDialogExample(
+            onConfirmation = {
+                gameViewModel.restartGame()
+            },
+            onDismissRequest = {
+                gameViewModel.restartGame()
+            },
+            dialogTitle = "¡Has perdido!",
+            dialogText = "La palabra era: ${gameViewModel.solution}",
+            icon = Icons.Filled.Warning
+        )
     }
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameScreen(onBack: () -> Unit, gameViewModel: GameViewModel = viewModel()) {
+
     Scaffold (containerColor = Color.Black,
         topBar = {
             TopAppBar(
@@ -95,11 +114,12 @@ fun GameScreen(onBack: () -> Unit, gameViewModel: GameViewModel = viewModel()) {
                     containerColor = Color(0xFF6AAA65)
                 )
             ) {
-                Text("Scores", color = Color.White)
+                Text("Home", color = Color.White)
             }
         }
         Estado(gameViewModel)
     }
+
 
 
 }
