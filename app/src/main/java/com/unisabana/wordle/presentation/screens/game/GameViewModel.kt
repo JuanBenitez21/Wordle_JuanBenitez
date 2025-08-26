@@ -10,6 +10,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.unisabana.wordle.data.Score
 import com.unisabana.wordle.data.ScoreRepository
 import com.unisabana.wordle.data.getRandomWord
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.sql.Timestamp
 
@@ -35,6 +38,33 @@ class GameViewModel(
     var finalScore by mutableIntStateOf(0)
         private set
 
+    var playerName by mutableStateOf("Jugador") // Variable para el nombre
+        private set
+
+
+    // Exponer las listas de scores como StateFlows
+    val scoresByScoreDesc: StateFlow<List<Score>> = scoreRepository.getAllScoresByScoreDesc()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = emptyList()
+        )
+
+    val scoresByDateAsc: StateFlow<List<Score>> = scoreRepository.getAllScoresByDateAsc()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = emptyList()
+        )
+
+    val scoresByDateDesc: StateFlow<List<Score>> = scoreRepository.getAllScoresByDateDesc()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = emptyList()
+        )
+
+
 
     //Funs
     fun showModal(){
@@ -51,7 +81,11 @@ class GameViewModel(
         isShowLose = false  // Reinicia el estado de perder
     }
 
+    fun onPlayerNameChanged(name: String) {
+        playerName = name
+    }
 
+    /*
     fun onSubmit() {
         if (current.length == 5 && attempts.size < 6) {
             attempts = attempts + current
@@ -75,6 +109,37 @@ class GameViewModel(
     }
 
 
+     */
+
+    fun onSubmit() {
+        if (current.length == 5 && attempts.size < 6) {
+            attempts = attempts + current
+
+            if (current.equals(solution, ignoreCase = true)) {
+                finalScore = calculateFinalScore(attempts.size)
+                showModal()
+                return
+            }
+
+            if (attempts.size == 6) {
+                isShowLose = true
+            } else {
+                current = ""
+            }
+        }
+    }
+
+    fun calculateScore() {
+        viewModelScope.launch {
+            scoreRepository.addScore(
+                score = finalScore,
+                name = playerName, // Pasa el nombre a la función de la BD
+                count = attempts.size,
+                isWinner = true,
+                solution = solution,
+            )
+        }
+    }
     fun onKeyPressed(letter: Char) {
         // Solo permite agregar letras si el juego no ha terminado y la palabra no está completa
         if (current.length < 5 && !isShowModal && !isShowLose) {
@@ -99,7 +164,7 @@ class GameViewModel(
             else -> 0
         }
     }
-
+/*
     fun calculateScore() {
         val finalScore = calculateFinalScore(attempts.size)
         viewModelScope.launch {
@@ -112,4 +177,6 @@ class GameViewModel(
             )
         }
     }
+
+ */
 }

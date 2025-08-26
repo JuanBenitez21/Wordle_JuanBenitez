@@ -15,6 +15,6 @@ data class Score(
     val count: Int,
     val isWinner: Boolean,
     val solution: String,
-   // val atCreated: Timestamp
+    val atCreated: Long
 )
 

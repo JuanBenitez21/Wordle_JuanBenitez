@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import java.time.Instant
+import androidx.room.TypeConverters
 
 
 @Database(
@@ -12,11 +13,9 @@ import java.time.Instant
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converters::class) // Le decimos a Room que use nuestro convertidor
 abstract class WordleDatabase : RoomDatabase(){
-
     abstract fun ScoreDao(): ScoreDao
-
-
     //singleton
     companion object{
         @Volatile

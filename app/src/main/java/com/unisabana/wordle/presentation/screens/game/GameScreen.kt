@@ -30,6 +30,8 @@ import com.unisabana.wordle.presentation.components.Grid
 import com.unisabana.wordle.presentation.components.Keyboard
 import com.unisabana.wordle.ui.theme.WordleTheme
 
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 
 @Composable
 fun Estado(gameViewModel: GameViewModel, onBack: () -> Unit) {
@@ -92,6 +94,21 @@ fun GameScreen(onBack: () -> Unit, gameViewModel: GameViewModel = viewModel()) {
                 gameViewModel::current.get(),
                 gameViewModel::solution.get(),
                 gameViewModel::attempts.get(),
+            )
+            OutlinedTextField(
+                value = gameViewModel.playerName,
+                onValueChange = { gameViewModel.onPlayerNameChanged(it) },
+                label = { Text("Tu nombre", color = Color.White) },
+                singleLine = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White.copy(alpha = 0.5f),
+                    focusedLabelColor = Color.White,
+                    unfocusedLabelColor = Color.White.copy(alpha = 0.5f),
+                    cursorColor = Color.White
+                )
             )
 
             Keyboard { key ->

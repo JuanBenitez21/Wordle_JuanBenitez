@@ -10,7 +10,7 @@ import com.unisabana.wordle.data.ScoreRepository
 import com.unisabana.wordle.data.WordleDatabase
 import com.unisabana.wordle.presentation.screens.game.GameScreen
 import com.unisabana.wordle.presentation.screens.HomeScreen
-import com.unisabana.wordle.presentation.screens.ScoreScreen
+import com.unisabana.wordle.presentation.screens.score.ScoreScreen
 import com.unisabana.wordle.presentation.screens.game.GameViewModel
 import kotlinx.serialization.Serializable
 
