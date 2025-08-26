@@ -19,8 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,7 +32,7 @@ import com.unisabana.wordle.ui.theme.WordleTheme
 
 
 @Composable
-fun Estado(gameViewModel: GameViewModel) {
+fun Estado(gameViewModel: GameViewModel, onBack: () -> Unit) {
     if (gameViewModel.isShowModal) {
         AlertDialogExample(
             onConfirmation = {
@@ -42,9 +40,9 @@ fun Estado(gameViewModel: GameViewModel) {
             },
             onDismissRequest = {
                 gameViewModel.restartGame()
+                onBack()
             },
             dialogTitle = "¡Felicidades, has ganado!",
-            // Usa gameViewModel.finalScore para mostrar el puntaje
             dialogText = "¡Puntaje: ${gameViewModel.finalScore}! Lo lograste en ${gameViewModel.attempts.size} intentos.",
             icon = Icons.Filled.Done
         )
@@ -55,6 +53,7 @@ fun Estado(gameViewModel: GameViewModel) {
             },
             onDismissRequest = {
                 gameViewModel.restartGame()
+                onBack()
             },
             dialogTitle = "¡Has perdido!",
             dialogText = "La palabra era: ${gameViewModel.solution}",
@@ -117,7 +116,7 @@ fun GameScreen(onBack: () -> Unit, gameViewModel: GameViewModel = viewModel()) {
                 Text("Home", color = Color.White)
             }
         }
-        Estado(gameViewModel)
+        Estado(gameViewModel, onBack)
     }
 
 
@@ -130,5 +129,6 @@ fun PreviewGameScreen(){
     WordleTheme {
         GameScreen(onBack = {})
     }
+
 
 }
